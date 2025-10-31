@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://7uyfq24g8brd"]
+
+[ext_resource type="Texture2D" uid="uid://pytkyofq2saa" path="res://icon.svg" id="2_ay8wa"]
+[ext_resource type="PackedScene" uid="uid://cpfhq7fttee23" path="res://scenes/hurt_box.tscn" id="3_58rkn"]
+
+[sub_resource type="GDScript" id="GDScript_rw3yv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wfubt"]
+radius = 76.2955
+
+[node name="Player" type="CharacterBody2D"]
+script = SubResource("GDScript_rw3yv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ay8wa")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wfubt")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="hurt_box" parent="." instance=ExtResource("3_58rkn")]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

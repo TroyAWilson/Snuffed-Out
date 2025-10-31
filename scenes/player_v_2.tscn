@@ -1,0 +1,105 @@
+[gd_scene load_steps=16 format=3 uid="uid://d0j1xj5amuwv5"]
+
+[ext_resource type="Script" path="res://scripts/player_v_2.gd" id="1_ls1mc"]
+[ext_resource type="PackedScene" uid="uid://cpfhq7fttee23" path="res://scenes/hurt_box.tscn" id="2_4m8um"]
+[ext_resource type="Texture2D" uid="uid://ojp1qblxfmae" path="res://assets/fireSprite.png" id="2_31xkt"]
+[ext_resource type="Script" path="res://scripts/light.gd" id="4_gnr82"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_068mn"]
+atlas = ExtResource("2_31xkt")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7efd5"]
+atlas = ExtResource("2_31xkt")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dpax7"]
+atlas = ExtResource("2_31xkt")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_06g35"]
+atlas = ExtResource("2_31xkt")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h0iqt"]
+atlas = ExtResource("2_31xkt")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k32gg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_068mn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7efd5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dpax7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_06g35")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h0iqt")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_th4oy"]
+radius = 13.0
+
+[sub_resource type="Gradient" id="Gradient_nsql2"]
+offsets = PackedFloat32Array(0, 0.974026)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rua5m"]
+gradient = SubResource("Gradient_nsql2")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ba23w"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ku4hy"]
+bg_color = Color(0.29706, 0.709073, 0, 1)
+
+[node name="playerV2" type="CharacterBody2D" node_paths=PackedStringArray("healthBar")]
+collision_mask = 5
+script = ExtResource("1_ls1mc")
+healthBar = NodePath("healthBar")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_k32gg")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="hurt_box" parent="." instance=ExtResource("2_4m8um")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurt_box"]
+shape = SubResource("CircleShape2D_th4oy")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(1, 0.647059, 0, 1)
+texture = SubResource("GradientTexture2D_rua5m")
+script = ExtResource("4_gnr82")
+
+[node name="healthBar" type="ProgressBar" parent="."]
+offset_left = -15.0
+offset_top = -25.0
+offset_right = 15.0
+offset_bottom = -19.0
+theme_override_styles/background = SubResource("StyleBoxFlat_ba23w")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ku4hy")
+rounded = true
+show_percentage = false
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
